@@ -7,15 +7,12 @@
         <input type='text' :placeholder="getSourceString()" :value="editString">
         <button @click="updateString()">ok</button>
     </span>
-  </div> 
+  </div>
 </template>
 <script>
 export default {
-  name: 'Translate',
+  name: 'i18n',
   props: {
-    sid: {
-      required: true
-    },
     cid: {
       required: false
     }
@@ -26,17 +23,17 @@ export default {
         admin:false,
         parent : '',
     }
-  },  
+  },
   mounted(){
-      this.admin = this.$admin;    
+      this.admin = this.$admin;
       if(this.$parent && this.$parent.$vnode && this.$parent.$vnode.tag){
           this.parent=this.$parent.$vnode.tag;
       }
-         
+
   },
   computed: {
     string () {
-      let string = this.$getString(this.sid, this.cid, this.$getLanguage());
+      let string = this.$getString(this.$slots.default[0].text, this.cid, this.$getLanguage());
       if(!string && this.$slots.default && this.$slots.default.length > 0){
         string = this.$slots.default[0].text;
       }
@@ -46,9 +43,9 @@ export default {
       if(context.indexOf('sid=')>0){
         context=context.substring(0,context.indexOf('sid=')-1);
       }
-     
-      this.$setString(string, this.sid, this.cid?this.cid:this.parent, language_id, context); 
-  
+
+      this.$setString(string, this.sid, this.cid?this.cid:this.parent, language_id, context);
+
       return string
     },
     highlightString(){
@@ -59,7 +56,7 @@ export default {
       }else{
         return false;
       }
-    }  
+    }
   },
   methods: {
      updateString(){

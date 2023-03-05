@@ -1,4 +1,4 @@
-import translate from "./Translate.vue";
+import translate from "./i18n.vue";
 
 const VueSteafish = {
   install(Vue, options) {
@@ -17,7 +17,7 @@ const VueSteafish = {
         };
         Vue.prototype.$getString = (string_id, category_id, language_id) => {
             return options.getString(string_id, category_id, language_id);
-        };    
+        };
         Vue.prototype.$setString = (string, string_id, category_id, language_id, parent) => {
             options.setString(string, string_id, category_id, language_id, parent);
         };
