@@ -1,6 +1,6 @@
-import translate from "./i18n.vue";
+import i18n from "./i18n.vue";
 
-const VueSteafish = {
+const i18nSteafish = {
   install(Vue, options) {
         // Add $plugin instance method directly to Vue components
         Vue.prototype.$setStringData = (stringData) => {
@@ -30,25 +30,27 @@ const VueSteafish = {
         Vue.prototype.$getSourceLanguage = () => {
             return Vue.prototype.$sourceLanguage_id=options.getSourceLanguage();
         };
-        Vue.prototype.$getMessage = (string, string_id, language_id, category_id) => {
-            if(string!=null && string_id!=null && language_id!=null){
-                const lookUpString = options.getString(string, string_id, category_id, language_id);
+        Vue.prototype.$getMessage = (string_id, language_id, category_id) => {
+            let lookUpString = null
+            if(string_id!=null && language_id!=null){
+                lookUpString = options.getString(string_id, category_id, language_id);
                 if(lookUpString===null){
-                   options.setString(string, string_id, category_id, language_id);
+                   options.setString(null, string_id, category_id, language_id);
                 }
-            }else{
-                console.log('Steafish error! String_id: '+string_id+' Must have string_id, string and language_id');
             }
-            return string;
+            return lookUpString;
         };
-        Vue.component("translate", translate);
+        Vue.prototype.$t = (string_id, variables, category_id, language_id) => {
+            return options.getString(string_id, category_id, language_id);
+        };
+        Vue.component("i18n", i18n);
     },
 };
 
 // Automatic installation if Vue has been added to the global scope.
 if (typeof window !== "undefined" && window.Vue) {
-    window.Vue.use(VueSteafish);
+    window.Vue.use(i18nSteafish);
 }
 
-export default VueSteafish;
-export { translate };
+export default i18nSteafish;
+export { i18n };
