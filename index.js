@@ -1,56 +1,54 @@
-import i18n from "./i18n.vue";
-
-const i18nSteafish = {
-  install(Vue, options) {
-        // Add $plugin instance method directly to Vue components
-        Vue.prototype.$setStringData = (stringData) => {
-            Vue.prototype.$stringData = stringData;
-        };
-        Vue.prototype.$setLanguage = (language_id) => {
-            Vue.prototype.$language_id = language_id;
-        };
-        Vue.prototype.$setAdmin = (admin) => {
-            Vue.prototype.$admin = admin;
-        };
-        Vue.prototype.$setSourceLanguage = (sourceLanguage_id) => {
-            Vue.prototype.$sourceLanguage_id=sourceLanguage_id;
-        };
-        Vue.prototype.$getString = (string_id, category_id, language_id) => {
-            return options.getString(string_id, category_id, language_id);
-        };
-        Vue.prototype.$setString = (string, string_id, category_id, language_id, parent) => {
-            options.setString(string, string_id, category_id, language_id, parent);
-        };
-        Vue.prototype.$getLanguage = () => {
-            if(Vue.prototype.$language_id==null){
-                Vue.prototype.$language_id = options.getLanguage();
-            }
-            return Vue.prototype.$language_id;
-        };
-        Vue.prototype.$getSourceLanguage = () => {
-            return Vue.prototype.$sourceLanguage_id=options.getSourceLanguage();
-        };
-        Vue.prototype.$getMessage = (string_id, language_id, category_id) => {
-            let lookUpString = null
-            if(string_id!=null && language_id!=null){
-                lookUpString = options.getString(string_id, category_id, language_id);
-                if(lookUpString===null){
-                   options.setString(null, string_id, category_id, language_id);
-                }
-            }
-            return lookUpString;
-        };
-        Vue.prototype.$t = (string_id, variables, category_id, language_id) => {
-            return options.getString(string_id, category_id, language_id);
-        };
-        Vue.component("i18n", i18n);
-    },
-};
-
-// Automatic installation if Vue has been added to the global scope.
-if (typeof window !== "undefined" && window.Vue) {
-    window.Vue.use(i18nSteafish);
+import translate from "./translate.vue";
+export default {
+  install: (app, options) => {
+    // Add $plugin instance method directly to Vue components
+    app.config.globalProperties.$setStringData = (stringData) => {
+      app.config.globalProperties.$stringData = stringData
+    }
+    app.config.globalProperties.$setLanguage = (language_id) => {
+      app.config.globalProperties.$language_id = language_id
+    }
+    app.config.globalProperties.$setAdmin = (admin) => {
+      app.config.globalProperties.$admin = admin
+    }
+    app.config.globalProperties.$setSourceLanguage = (sourceLanguage_id) => {
+      app.config.globalProperties.$sourceLanguage_id = sourceLanguage_id
+    }
+    app.config.globalProperties.$getString = (string_id, category_id, language_id) => {
+      return options.getString(string_id, category_id, language_id)
+    }
+    app.config.globalProperties.$setString = (string, string_id, category_id, language_id, parent) => {
+      options.setString(string, string_id, category_id, language_id, parent)
+    }
+    app.config.globalProperties.$getLanguage = () => {
+      if (app.config.globalProperties.$language_id == null) {
+        app.config.globalProperties.$language_id = options.getLanguage()
+      }
+      return app.config.globalProperties.$language_id
+    }
+    app.config.globalProperties.$getSourceLanguage = () => {
+      return app.config.globalProperties.$sourceLanguage_id = options.getSourceLanguage()
+    }
+    app.config.globalProperties.$getMessage = (string_id, language_id, category_id) => {
+      let lookUpString = null
+      if (string_id != null && language_id != null) {
+        lookUpString = options.getString(string_id, category_id, language_id)
+        if (lookUpString === null) {
+          options.setString(null, string_id, category_id, language_id)
+        }
+      }
+      return lookUpString
+    }
+    app.config.globalProperties.$t = (string_id, variables, category_id, language_id) => {
+      return options.getString(string_id, category_id, language_id)
+    }
+    app.config.globalProperties.$translate = (key) => {
+      // retrieve a nested property in `options`
+      // using `key` as the path
+      return key.split('.').reduce((o, i) => {
+        if (o) return o[i]
+      }, options)
+    }
+    app.component("translate", translate)
+  },
 }
-
-export default i18nSteafish;
-export { i18n };
