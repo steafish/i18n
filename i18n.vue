@@ -13,7 +13,12 @@
 export default {
   name: 'i18n',
   props: {
+    sid:{
+      type:String,
+      required: true,
+    },
     cid: {
+      type:String,
       required: false
     }
   },
@@ -33,8 +38,9 @@ export default {
   },
   computed: {
     string () {
-      let string = this.$getString(this.$slots.default[0].text, this.cid, this.$getLanguage());
-      if(!string && this.$slots.default && this.$slots.default.length > 0){
+      console.log('Slots',this.$slots)
+      let string = this.$getString(this.sid, this.cid, this.$getLanguage());
+      if(!string && this.$slots && this.$slots.default && this.$slots.default.length > 0){
         string = this.$slots.default[0].text;
       }
 
