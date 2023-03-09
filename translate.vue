@@ -2,7 +2,7 @@
 <template>
   <div v-bind:class="{ selected: highlightString }" class="translate">
     <span v-if="string">{{ string }}</span>
-    <span v-else><slot/></span>
+    <span v-else><slot name="string"/></span>
     <span v-if="admin" :title="enString">
         <input type='text' :placeholder="getSourceString()" :value="editString">
         <button @click="updateString()">ok</button>
@@ -38,10 +38,11 @@ export default {
   },
   computed: {
     string () {
-      console.log('Slots',this.$slots)
       let string = this.$getString(this.sid, this.cid, this.$getLanguage());
-      if(!string && this.$slots && this.$slots.default && this.$slots.default.length > 0){
-        string = this.$slots.default[0].text;
+
+      if(!string && Array.isArray(this.$slots && this.$slots.string) && this.$slots.string[0] && Array.isArray(this.$slots.string[0].children) && this.$slots.string[0].children[0]){
+        string = this.$slots.string[0].children[0].text;
+        console.log('String: ',string);
       }
 
       const language_id = this.$getLanguage()?this.$getLanguage():this.$getSourceLanguage();
